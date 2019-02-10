@@ -1,4 +1,5 @@
 const Post = require('../models/post.model');
+const Comment = require('../models/comment.model');
 //Simple version, without validation or sanitation
 exports.test = function (req, res) {
     res.send('Greetings from the Test controller!');
@@ -56,7 +57,8 @@ exports.post_details = function (req, res, next) {
 exports.post_all = function (req, res) {
     Post.find(function (err, post) {
         if (err) return next(err);
-        res.send(post);
+        res.json(post);
+        console.log(post)
     });
 };
 
@@ -67,6 +69,28 @@ exports.post_update = function (req, res) {
         if (err) return next(err);
         res.send('Post updated.');
     });
+};
+
+exports.post_addComment = function (req, res,done) {
+    let comment = new Comment({
+        content: req.body.content,
+        who: req.body.who
+    });
+    console.log(req.params.id, req.body.content, req.body.who);
+    // Post.Comment.push(comment);
+    // Post.save(done)
+    Post.updateOne( 
+        {_id: req.params.id},
+        { $push: { comments: comment}},
+        done
+    );
+    res.send('Added comment to '+req.params.id+"<br>Comment : "+comment);
+    // Post.findByIdAndUpdate(req.params.id, {
+    //     $set: req.body
+    // }, function (err, post) {
+    //     if (err) return next(err);
+    //     res.send('Post updated.');
+    // });
 };
 
 exports.post_delete = function (req, res) {
