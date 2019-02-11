@@ -12,6 +12,7 @@ router.post('/create', post_controller.post_create);
 // router.get('/:id', post_controller.post_details);
 
 router.put('/:id/update', post_controller.post_update);
+router.put('/:id/addComment', post_controller.post_addComment);
 
 router.delete('/:id/delete', post_controller.post_delete);
 
